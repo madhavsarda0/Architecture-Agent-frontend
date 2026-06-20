@@ -146,15 +146,17 @@ function autoSelect(text, winCounts, hasPerplexityKey) {
 }
 
 // ════════════════════════════════════════════════════════════════════════
-// PROMPT — forces every model into the same 13-section, plain-English shape
+// PROMPT — forces every model into the same 12-section, beginner-launch-focused shape
 // ════════════════════════════════════════════════════════════════════════
 function buildPrompt(projectDescription, extraContext) {
-  return `You are explaining a technical project to someone with ZERO coding or technical background. Follow these rules without exception:
+  return `You are talking to someone with ZERO coding, business, or technical background. They have an idea for a product or service and a gut feeling it could work — but no idea how to actually build or launch it. Your job is to be the knowledgeable friend who tells them exactly what to do, in an order they can follow, so they could realistically start taking action today. Follow these rules without exception:
 
-- Use short sentences.
-- Every single time you use a technical word, explain it immediately afterward in plain English inside square brackets. Example: "API [a way for two computer programs to send each other information]". Do this every time, even for words that seem obvious to you.
-- Keep the same depth and amount of detail you would give a technical reader — just use simpler words to say it.
-- Use the EXACT 13 section headers below, in this EXACT order, each on its own line starting with "## " then the number, a period, then the title in capital letters. Do not add, remove, merge, or reorder sections.
+- Use short sentences. Use everyday words.
+- Every single time you use a technical, business, or finance word, explain it immediately afterward in plain English inside square brackets. Example: "API [a way for two computer programs to send each other information]". Do this every time, even for words that seem obvious to you.
+- Never assume the reader knows what ANY tool, platform, or term means. If you name a specific tool or service, briefly say in one phrase what it's for.
+- Keep the same depth of real information you'd give a technical or business reader — just say it in simple words. Do not water down the substance, only the language.
+- Write like you are guiding them to actually do this, not just describing it from a distance. Prefer concrete specifics ("start with X, then do Y") over vague advice ("research your options").
+- Use the EXACT 12 section headers below, in this EXACT order, each on its own line starting with "## " then the number, a period, then the title in capital letters. Do not add, remove, merge, or reorder sections.
 
 PROJECT DESCRIPTION:
 ${projectDescription}
@@ -163,15 +165,18 @@ ${extraContext ? `\nADDITIONAL CONTEXT:\n${extraContext}\n` : ""}
 Now write the full answer using exactly this structure:
 
 ## 1. MAIN QUESTION
-Restate, in one or two plain sentences, the main problem or question this project is trying to solve.
+Restate, in one or two plain sentences, the main problem or need this idea addresses.
 
 ## 2. SUMMARY
-A short plain-English summary of the whole idea (4-6 sentences).
+A short plain-English summary of the whole idea (4-6 sentences) — what it is and who it's for.
 
-## 3. ALGORITHM
-Explain, step by step and numbered, exactly how the system would work from start to finish.
+## 3. WHAT YOU'RE ACTUALLY BUILDING
+Describe, in plain words first, all the main pieces of this product or service and how they fit together. Only after the plain-English explanation, add a simple ASCII diagram (a picture made only of text characters like boxes and arrows) showing those pieces, inside a code block using three backtick characters before and after it.
 
-## 4. EXAMPLES
+## 4. HOW IT WORKS, STEP BY STEP
+Explain, numbered, exactly what happens from the moment a customer/user shows up to the moment they get value from it.
+
+## 5. REAL-WORLD EXAMPLES
 Give three versions of a worked example using exactly these subheadings:
 ### SIMPLE
 A very basic example a total beginner would follow easily.
@@ -180,32 +185,26 @@ A realistic, everyday example with a bit more detail.
 ### COMPLEX
 An advanced, real-world example with more moving parts.
 
-## 5. INDEX
-A short glossary. List every technical word you used above as a bullet, each with a one-line plain-English meaning.
+## 6. YOUR LAUNCH PLAN
+This is the most important section. Give a concrete, numbered, step-by-step plan for actually launching this idea, written for someone starting from zero. Cover, in order: what to do first (week 1), what to set up or build next, what to test before spending real money, and how to get the first real users or customers. Name specific types of tools or platforms a beginner could realistically use at each step (with a one-phrase explanation of what each does), not just generic advice like "build a website."
 
-## 6. FULL ARCHITECTURE DATA
-Describe all the main components (parts) of the system and how information flows between them in plain English. Then draw a simple ASCII diagram (a picture made only of text characters like boxes and arrows) showing the components and the flow of data, inside a code block using three backtick characters before and after it.
+## 7. WHAT YOU'LL NEED & WHAT IT COSTS
+List the tools, skills, people, or services needed to build and run this for the first year, paired with a low-end and high-end dollar estimate, and a plain-English time estimate for getting a first working version live, with a one-line reason why.
 
-## 7. DEPLOYMENT TIME
-A plain-English estimate of how long it would take to build and launch this, with a one-line reason why.
+## 8. WHO WILL USE THIS & HOW MANY
+A realistic plain-English estimate of who would use this, roughly how many people might adopt it and over what time period, and roughly what percent of the relevant audience this could realistically reach, with a one-line reason for that number.
 
-## 8. COST MIN-MAX
-A low-end and a high-end cost estimate (in dollars) to build and run this for the first year.
+## 9. WILL THIS MAKE MONEY
+A plain-English, stage-by-stage estimate of when money put into this might start coming back (ROI [return on investment, meaning the money you earn back compared to what you spent]).
 
-## 9. ADOPTION STATS
-A realistic plain-English estimate of how many people might start using something like this, and over what time period.
-
-## 10. UNIQUENESS STRATEGY
+## 10. WHAT MAKES YOURS DIFFERENT
 Plain-English explanation of what could make this idea stand out from similar things that already exist.
 
-## 11. DISADVANTAGES
-A clear bullet list of the downsides, risks, or weak points of this idea.
+## 11. WHAT COULD GO WRONG
+A clear bullet list of the downsides, risks, or weak points of this idea — and for each one, a one-line note on how someone could plan around it or reduce it.
 
-## 12. POPULATION IMPACT %
-A rough plain-English estimate of what percent of a relevant group of people this could realistically help or reach, with a one-line reason for that number.
-
-## 13. ROI TIMELINE
-A plain-English, stage-by-stage estimate of when money put into this might start coming back (ROI [return on investment, meaning the money you earn back compared to what you spent]).`;
+## 12. GLOSSARY
+A short glossary. List every technical, business, or finance word you used above as a bullet, each with a one-line plain-English meaning. This is the last section — a reference list, not something they need to read first.`;
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -249,12 +248,18 @@ This is a [PREVIEW] mock answer from ${m.name}, shown because no backend URL is 
 ## 2. SUMMARY
 ${m.name} (${m.blurb.toLowerCase()}) would normally summarize the idea here in four to six plain sentences. This is placeholder text so you can see the layout working end-to-end before your backend is live.
 
-## 3. ALGORITHM
-1. Collect input [information given to the system].
-2. Process it through the core logic.
-3. Return a result to the user.
+## 3. WHAT YOU'RE ACTUALLY BUILDING
+The system would have a few main parts that pass information to each other.
+\`\`\`
+[User] --> [App] --> [Database [where information is stored]]
+\`\`\`
 
-## 4. EXAMPLES
+## 4. HOW IT WORKS, STEP BY STEP
+1. The user does something that starts the process.
+2. The system processes it through the core logic.
+3. The system returns a result to the user.
+
+## 5. REAL-WORLD EXAMPLES
 ### SIMPLE
 A basic walkthrough would appear here.
 ### MEDIUM
@@ -262,37 +267,32 @@ A more detailed, realistic walkthrough would appear here.
 ### COMPLEX
 An advanced, multi-step walkthrough would appear here.
 
-## 5. INDEX
-- API [a way for two computer programs to send each other information]
-- Preview [a stand-in response shown because the backend isn't connected yet]
+## 6. YOUR LAUNCH PLAN
+1. Week 1: validate the idea — talk to a few potential users before building anything.
+2. Set up the simplest possible version using a no-code tool [a tool that lets you build something without writing programming code].
+3. Test it with a small group before spending real money on it.
+4. Get your first real users through a low-cost channel like word of mouth or a simple social post.
 
-## 6. FULL ARCHITECTURE DATA
-The system would have a few main parts that pass data to each other.
-\`\`\`
-[User] --> [App] --> [Database]
-\`\`\`
+## 7. WHAT YOU'LL NEED & WHAT IT COSTS
+You'd need a few basic tools and maybe a freelancer for the technical pieces. Low end: $2,000. High end: $20,000, depending on features. A first working version would realistically take 4-8 weeks.
 
-## 7. DEPLOYMENT TIME
-Roughly 4-8 weeks for a first version, depending on scope.
+## 8. WHO WILL USE THIS & HOW MANY
+A few hundred early users within the first 3 months is a realistic start, reaching roughly 5-10% of the relevant audience early on.
 
-## 8. COST MIN-MAX
-Low end: $2,000. High end: $20,000, depending on features.
+## 9. WILL THIS MAKE MONEY
+Early traction in months 1-3, break-even somewhere in months 6-12, depending on costs.
 
-## 9. ADOPTION STATS
-A few hundred early users within the first 3 months is a realistic start.
-
-## 10. UNIQUENESS STRATEGY
+## 10. WHAT MAKES YOURS DIFFERENT
 Focusing on one clear use case better than competitors would help this stand out.
 
-## 11. DISADVANTAGES
-- Preview data only — connect your backend for a true answer.
-- Limited detail in preview mode.
+## 11. WHAT COULD GO WRONG
+- Preview data only — connect your backend for a true answer. (Fix: deploy the backend.)
+- Limited detail in preview mode. (Fix: this resolves automatically once a real model responds.)
 
-## 12. POPULATION IMPACT %
-Roughly 5-10% of the relevant audience, as a rough early estimate.
-
-## 13. ROI TIMELINE
-Early traction in months 1-3, break-even somewhere in months 6-12, depending on costs.`);
+## 12. GLOSSARY
+- API [a way for two computer programs to send each other information]
+- No-code tool [a tool that lets you build something without writing programming code]
+- Preview [a stand-in response shown because the backend isn't connected yet]`);
     }, 900 + Math.random() * 1400);
   });
 }
@@ -311,22 +311,21 @@ async function callModel(modelKey, prompt, projectDesc) {
 }
 
 // ════════════════════════════════════════════════════════════════════════
-// PARSING — splits one model's raw answer into the 13 labeled sections
+// PARSING — splits one model's raw answer into the 12 labeled sections
 // ════════════════════════════════════════════════════════════════════════
 const SECTION_DEFS = [
   { num: "1", title: "Main Question", icon: "❓" },
   { num: "2", title: "Summary", icon: "📝" },
-  { num: "3", title: "Algorithm", icon: "🔁" },
-  { num: "4", title: "Examples", icon: "💡" },
-  { num: "5", title: "Index", icon: "📚" },
-  { num: "6", title: "Full Architecture Data", icon: "🏗️" },
-  { num: "7", title: "Deployment Time", icon: "⏱️" },
-  { num: "8", title: "Cost Min–Max", icon: "💰" },
-  { num: "9", title: "Adoption Stats", icon: "📈" },
-  { num: "10", title: "Uniqueness Strategy", icon: "✨" },
-  { num: "11", title: "Disadvantages", icon: "⚠️" },
-  { num: "12", title: "Population Impact %", icon: "🌍" },
-  { num: "13", title: "ROI Timeline", icon: "📅" },
+  { num: "3", title: "What You're Actually Building", icon: "🏗️" },
+  { num: "4", title: "How It Works, Step by Step", icon: "🔁" },
+  { num: "5", title: "Real-World Examples", icon: "💡" },
+  { num: "6", title: "Your Launch Plan", icon: "🚀" },
+  { num: "7", title: "What You'll Need & What It Costs", icon: "💰" },
+  { num: "8", title: "Who Will Use This & How Many", icon: "📈" },
+  { num: "9", title: "Will This Make Money", icon: "📅" },
+  { num: "10", title: "What Makes Yours Different", icon: "✨" },
+  { num: "11", title: "What Could Go Wrong", icon: "⚠️" },
+  { num: "12", title: "Glossary", icon: "📚" },
 ];
 
 function parseSections(text) {
